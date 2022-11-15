@@ -24,6 +24,7 @@ final class NotificationManager: ObservableObject {
             }
         }
     }
+     
     
     func requestAuthorization() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { isGranted, _ in
