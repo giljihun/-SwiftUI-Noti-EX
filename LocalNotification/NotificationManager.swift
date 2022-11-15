@@ -24,6 +24,7 @@ final class NotificationManager: ObservableObject {
             }
         }
     }
+     
     
     func requestAuthorization() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { isGranted, _ in
@@ -34,7 +35,6 @@ final class NotificationManager: ObservableObject {
     }
     
     func reloadLocalNotification() {
-        print("reload notifications")
         UNUserNotificationCenter.current().getPendingNotificationRequests { notifications in
             // getPendingNotificationRequests -> 현재 요청된 알림들을 탐색
             DispatchQueue.main.async {
@@ -42,4 +42,9 @@ final class NotificationManager: ObservableObject {
             }
         }
     }
+    
+    
+    
+    
+    
 }
