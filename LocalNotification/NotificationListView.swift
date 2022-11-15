@@ -39,6 +39,12 @@ struct NotificationListView: View {
                     .imageScale(.large)
             }
         }
+        .sheet(isPresented: $isCreatPresented) {
+            NavigationView {
+                CreatNotificationView(notificationManager: NotificationManager(), isPresented: $isCreatPresented)
+            }
+            .accentColor(.primary)
+        }
     }
 }
 
