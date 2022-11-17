@@ -11,6 +11,8 @@ struct NotificationListView: View {
     @StateObject private var notificationManager = NotificationManager()
     //@StateObject -> 뷰안에서 안전하게 ObservedObject 인스턴스를 만들 수 있다.
     @State private var isCreatPresented = false
+    
+    
     var body: some View {
         List(notificationManager.notifications, id: \.identifier) { notification in
             Text(notification.content.title)
@@ -26,7 +28,7 @@ struct NotificationListView: View {
                 notificationManager.requestAuthorization()
             case .authorized:
                 //get local notifications
-                notificationManager.reloadLocalNotification()
+                notificationManager.reloadLocalNotifications()
             default: //don't allow
                 break
             }
