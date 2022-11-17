@@ -16,6 +16,7 @@ final class NotificationManager: ObservableObject {
     @Published private(set) var authorizationStatus: UNAuthorizationStatus?
     /* '?'(Optional) -> 옵셔널은 값이 있을 수도 있고 없을 수도 있는 변수를 정의할 때 사용된다.
       값이 없다면 'nil' 반환 */
+    
     func reloadAuthorizationStatus() {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             DispatchQueue.main.async {
@@ -25,7 +26,6 @@ final class NotificationManager: ObservableObject {
         }
     }
      
-    
     func requestAuthorization() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { isGranted, _ in
             DispatchQueue.main.async {
@@ -34,17 +34,33 @@ final class NotificationManager: ObservableObject {
         }
     }
     
-    func reloadLocalNotification() {
-        UNUserNotificationCenter.current().getPendingNotificationRequests { notifications in
-            // getPendingNotificationRequests -> 현재 요청된 알림들을 탐색
+    func reloadLocalNotifications() {
+        UNUserNotificationCenter.current().getPendingNotificationRequests { notifications  // getPendingNotificationRequests -> 현재 요청된 알림들을 탐색
+            in
             DispatchQueue.main.async {
                 self.notifications = notifications
+                print("done!")
             }
         }
     }
     
+    func creatLocalNotification(title: String, hour: Int, minute: Int, completion:
+        @escaping (Error?) -> Void){
+        
+        var dateComponents = DateComponents()
+        dateComponents.hour = hour
+        dateComponents.minute = minute
+        
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+        
+        let notificationContent = UNMutableNotificationContent()
+        notificationContent.title = title
+        notificationContent.sound = .default
+        
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: trigger)
+        
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: completion)
     
-    
-    
+    }
     
 }

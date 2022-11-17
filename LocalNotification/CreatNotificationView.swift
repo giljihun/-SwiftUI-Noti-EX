@@ -25,10 +25,21 @@ struct CreatNotificationView: View {
                     .padding(.horizontal, 12)
                     .background(Color(.white))
                     .cornerRadius(5)
-                    Button {
-                        //
-                    } label: {
-                        Text("Creat")
+                    
+                    Button { // 'Create' 버튼
+                        let dateComponents = Calendar.current.dateComponents([.hour, .minute], from: date)
+                        guard let hour = dateComponents.hour, let minute = dateComponents.minute else { return }
+                        notificationManager.creatLocalNotification(title: title, hour: hour, minute: minute) { error in
+                            if error == nil {
+                                DispatchQueue.main.async {
+                                    self.isPresented = false
+                                }
+                            }
+                        }
+                        notificationManager.reloadLocalNotifications()
+                    }
+                    label: {
+                        Text("Create")
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity)
                     }
