@@ -12,13 +12,70 @@ struct NotificationListView: View {
     //@StateObject -> 뷰안에서 안전하게 ObservedObject 인스턴스를 만들 수 있다.
     @State private var isCreatPresented = false
     
+    private static var notificationDateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeStyle = .short
+        return dateFormatter
+    }()
+    
+    private func timeDisplayText(from notification: UNNotificationRequest) -> String {
+        guard let nextTriggerDate = (notification.trigger as?
+                                     UNCalendarNotificationTrigger)?.nextTriggerDate() else { return "" }
+        return Self.notificationDateFormatter.string(from: nextTriggerDate)
+    }
+    
+    
+    
+    
+    @ViewBuilder // 이 뷰에는 @ViewBuilder를 넣어주어야한다. -> body 프로퍼티는 암시적으로 이게 선언되어있다고 보면 된다.
+    // 그렇기에 body외의 다른 프로퍼티나 메서드는 기본적으로 ViewBuilder를 유추하지 않기 때문에 @ViewBuilder를 명시적으로 넣어줘야한다.
+    var infoOverlayView: some View {
+        switch notificationManager.authorizationStatus {
+        case .authorized:
+            if notificationManager.notifications.isEmpty {
+                InfoOverlayView(
+                    infoMessage: "No Notifications Yet",
+                    buttonTitle: "Create",
+                    systemImageName: "plus.circle",
+                    action: {
+                        isCreatPresented = true
+                    }
+                )
+            }
+        case .denied:
+            InfoOverlayView(
+                infoMessage: "Plz Enable Permission",
+                buttonTitle: "Settings",
+                systemImageName: "gear",
+                action: {
+                    if let url = URL(string: UIApplication.openSettingsURLString),
+                        UIApplication.shared.canOpenURL(url) {
+                        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                    }
+                }
+            )
+        default:
+            EmptyView()
+        }
+    }
+    
+    
     
     var body: some View {
-        List(notificationManager.notifications, id: \.identifier) { notification in
-            Text(notification.content.title)
-                .fontWeight(.semibold)
+        List{
+            ForEach(notificationManager.notifications, id: \.identifier) { notification in
+                HStack {
+                    Text(notification.content.title)
+                        .fontWeight(.semibold)
+                    Text(timeDisplayText(from: notification))
+                        .fontWeight(.bold)
+                    Spacer()
+                }
+            }
+            .onDelete(perform: delete)
         }
         .listStyle(InsetGroupedListStyle())
+        .overlay(infoOverlayView)
         .navigationTitle("Cool - Time")
         .onAppear(perform: notificationManager.reloadAuthorizationStatus)
         .onChange(of: notificationManager.authorizationStatus) { authorizationStatus in
@@ -32,6 +89,10 @@ struct NotificationListView: View {
             default: //don't allow
                 break
             }
+        }
+        .onReceive(NotificationCenter.default.publisher(for:
+            UIApplication.willEnterForegroundNotification)) { _ in
+            notificationManager.reloadAuthorizationStatus()
         }
         .toolbar {
             Button {
@@ -47,6 +108,15 @@ struct NotificationListView: View {
             }
             .accentColor(.primary)
         }
+    }
+}
+
+extension NotificationListView {
+    func delete (_ indexSet: IndexSet) {
+        notificationManager.deleteLocalNotificaitons(
+            identifiers: indexSet.map { notificationManager.notifications[$0].identifier }
+        )
+        notificationManager.reloadLocalNotifications()
     }
 }
 
