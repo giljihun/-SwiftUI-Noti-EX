@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		407DAD892923695700CF6155 /* CreatNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407DAD882923695700CF6155 /* CreatNotificationView.swift */; };
+		407DAD892923695700CF6155 /* CreateNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407DAD882923695700CF6155 /* CreateNotificationView.swift */; };
 		407DAD8B292A156D00CF6155 /* infoOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407DAD8A292A156D00CF6155 /* infoOverlayView.swift */; };
 		40BE7FD02920EE1D00ACE7C0 /* LocalNotificationApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40BE7FCF2920EE1D00ACE7C0 /* LocalNotificationApp.swift */; };
 		40BE7FD42920EE2200ACE7C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40BE7FD32920EE2200ACE7C0 /* Assets.xcassets */; };
@@ -17,7 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		407DAD882923695700CF6155 /* CreatNotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatNotificationView.swift; sourceTree = "<group>"; };
+		407DAD882923695700CF6155 /* CreateNotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNotificationView.swift; sourceTree = "<group>"; };
 		407DAD8A292A156D00CF6155 /* infoOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = infoOverlayView.swift; sourceTree = "<group>"; };
 		40BE7FCC2920EE1D00ACE7C0 /* LocalNotification.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocalNotification.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		40BE7FCF2920EE1D00ACE7C0 /* LocalNotificationApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationApp.swift; sourceTree = "<group>"; };
@@ -58,10 +58,6 @@
 			isa = PBXGroup;
 			children = (
 				40BE7FCF2920EE1D00ACE7C0 /* LocalNotificationApp.swift */,
-				40BE7FDF29227B2100ACE7C0 /* NotificationListView.swift */,
-				407DAD882923695700CF6155 /* CreatNotificationView.swift */,
-				40BE7FDD29227B0900ACE7C0 /* NotificationManager.swift */,
-				407DAD8A292A156D00CF6155 /* infoOverlayView.swift */,
 				40BE7FD32920EE2200ACE7C0 /* Assets.xcassets */,
 				40BE7FD52920EE2200ACE7C0 /* Preview Content */,
 			);
@@ -71,6 +67,10 @@
 		40BE7FD52920EE2200ACE7C0 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
+				40BE7FDF29227B2100ACE7C0 /* NotificationListView.swift */,
+				40BE7FDD29227B0900ACE7C0 /* NotificationManager.swift */,
+				407DAD882923695700CF6155 /* CreateNotificationView.swift */,
+				407DAD8A292A156D00CF6155 /* infoOverlayView.swift */,
 				40BE7FD62920EE2200ACE7C0 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
@@ -149,7 +149,7 @@
 				40BE7FDE29227B0900ACE7C0 /* NotificationManager.swift in Sources */,
 				40BE7FD02920EE1D00ACE7C0 /* LocalNotificationApp.swift in Sources */,
 				40BE7FE029227B2100ACE7C0 /* NotificationListView.swift in Sources */,
-				407DAD892923695700CF6155 /* CreatNotificationView.swift in Sources */,
+				407DAD892923695700CF6155 /* CreateNotificationView.swift in Sources */,
 				407DAD8B292A156D00CF6155 /* infoOverlayView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

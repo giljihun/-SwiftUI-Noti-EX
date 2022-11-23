@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CreatNotificationView: View {
+struct CreateNotificationView: View {
     @ObservedObject var notificationManager: NotificationManager
     @State private var title = ""
     @State private var date = Date()
@@ -29,16 +29,14 @@ struct CreatNotificationView: View {
                     Button { // 'Create' 버튼
                         let dateComponents = Calendar.current.dateComponents([.hour, .minute], from: date)
                         guard let hour = dateComponents.hour, let minute = dateComponents.minute else { return }
-                        notificationManager.creatLocalNotification(title: title, hour: hour, minute: minute) { error in
+                        notificationManager.createLocalNotification(title: title, hour: hour, minute: minute) { error in
                             if error == nil {
                                 DispatchQueue.main.async {
                                     self.isPresented = false
                                 }
                             }
                         }
-                        notificationManager.reloadLocalNotifications()
-                    }
-                    label: {
+                    } label: {
                         Text("Create")
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity)
@@ -53,6 +51,9 @@ struct CreatNotificationView: View {
             }
         }
         .listStyle(InsetGroupedListStyle())
+        .onDisappear {
+            notificationManager.reloadLocalNotifications()
+        }
         .navigationTitle("Create")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -67,8 +68,8 @@ struct CreatNotificationView: View {
     }
 }
 
-struct CreatNotificationView_Previews: PreviewProvider {
+struct CreateNotificationView_Previews: PreviewProvider {
     static var previews: some View {
-        CreatNotificationView(notificationManager: NotificationManager(), isPresented:  .constant(false))
+        CreateNotificationView(notificationManager: NotificationManager(), isPresented:  .constant(false))
     }
 }

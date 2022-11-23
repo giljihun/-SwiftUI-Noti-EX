@@ -10,7 +10,7 @@ import SwiftUI
 struct NotificationListView: View {
     @StateObject private var notificationManager = NotificationManager()
     //@StateObject -> 뷰안에서 안전하게 ObservedObject 인스턴스를 만들 수 있다.
-    @State private var isCreatPresented = false
+    @State private var isCreatePresented = false
     
     private static var notificationDateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -38,7 +38,7 @@ struct NotificationListView: View {
                     buttonTitle: "Create",
                     systemImageName: "plus.circle",
                     action: {
-                        isCreatPresented = true
+                        isCreatePresented = true
                     }
                 )
             }
@@ -59,8 +59,6 @@ struct NotificationListView: View {
         }
     }
     
-    
-    
     var body: some View {
         List{
             ForEach(notificationManager.notifications, id: \.identifier) { notification in
@@ -76,7 +74,7 @@ struct NotificationListView: View {
         }
         .listStyle(InsetGroupedListStyle())
         .overlay(infoOverlayView)
-        .navigationTitle("Cool - Time")
+        .navigationTitle("언제드라?")
         .onAppear(perform: notificationManager.reloadAuthorizationStatus)
         .onChange(of: notificationManager.authorizationStatus) { authorizationStatus in
             switch authorizationStatus {
@@ -96,15 +94,18 @@ struct NotificationListView: View {
         }
         .toolbar {
             Button {
-                isCreatPresented = true
+                isCreatePresented = true
             } label: {
                 Image(systemName: "plus.circle")
                     .imageScale(.large)
             }
         }
-        .sheet(isPresented: $isCreatPresented) {
+        .sheet(isPresented: $isCreatePresented) {
             NavigationView {
-                CreatNotificationView(notificationManager: NotificationManager(), isPresented: $isCreatPresented)
+                CreateNotificationView(
+                    notificationManager: notificationManager, // !!!! 오류 해결 !!!!
+                    isPresented: $isCreatePresented
+                )
             }
             .accentColor(.primary)
         }
@@ -112,8 +113,8 @@ struct NotificationListView: View {
 }
 
 extension NotificationListView {
-    func delete (_ indexSet: IndexSet) {
-        notificationManager.deleteLocalNotificaitons(
+    func delete(_ indexSet: IndexSet) {
+        notificationManager.deleteLocalNotifications(
             identifiers: indexSet.map { notificationManager.notifications[$0].identifier }
         )
         notificationManager.reloadLocalNotifications()

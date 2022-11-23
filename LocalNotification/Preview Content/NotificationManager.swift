@@ -17,6 +17,15 @@ final class NotificationManager: ObservableObject {
     /* '?'(Optional) -> 옵셔널은 값이 있을 수도 있고 없을 수도 있는 변수를 정의할 때 사용된다.
       값이 없다면 'nil' 반환 */
     
+    func reloadLocalNotifications() {
+        print("reloadLocalNotifications")
+        UNUserNotificationCenter.current().getPendingNotificationRequests { notifications in
+            DispatchQueue.main.async {
+                self.notifications = notifications
+            }
+        }
+    }
+    
     func reloadAuthorizationStatus() {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             DispatchQueue.main.async {
@@ -34,17 +43,8 @@ final class NotificationManager: ObservableObject {
         }
     }
     
-    func reloadLocalNotifications() {
-        UNUserNotificationCenter.current().getPendingNotificationRequests { notifications  // getPendingNotificationRequests -> 현재 요청된 알림들을 탐색
-            in
-            DispatchQueue.main.async {
-                self.notifications = notifications
-                print("done!")
-            }
-        }
-    }
     
-    func creatLocalNotification(title: String, hour: Int, minute: Int, completion:
+    func createLocalNotification(title: String, hour: Int, minute: Int, completion:
         @escaping (Error?) -> Void){
         
         var dateComponents = DateComponents()
@@ -63,7 +63,7 @@ final class NotificationManager: ObservableObject {
     
     }
     
-    func deleteLocalNotificaitons(identifiers: [String]) {
+    func deleteLocalNotifications(identifiers: [String]) {
         UNUserNotificationCenter.current()
             .removePendingNotificationRequests(withIdentifiers: identifiers)
     }
