@@ -11,6 +11,8 @@ struct NotificationListView: View {
     @StateObject private var notificationManager = NotificationManager()
     //@StateObject -> 뷰안에서 안전하게 ObservedObject 인스턴스를 만들 수 있다.
     @State private var isCreatePresented = false
+    @State private var keyword = "" // 검색기능용
+    
     
     private static var notificationDateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -23,9 +25,6 @@ struct NotificationListView: View {
                                      UNCalendarNotificationTrigger)?.nextTriggerDate() else { return "" }
         return Self.notificationDateFormatter.string(from: nextTriggerDate)
     }
-    
-    
-    
     
     @ViewBuilder // 이 뷰에는 @ViewBuilder를 넣어주어야한다. -> body 프로퍼티는 암시적으로 이게 선언되어있다고 보면 된다.
     // 그렇기에 body외의 다른 프로퍼티나 메서드는 기본적으로 ViewBuilder를 유추하지 않기 때문에 @ViewBuilder를 명시적으로 넣어줘야한다.
@@ -71,6 +70,11 @@ struct NotificationListView: View {
                 }
             }
             .onDelete(perform: delete)
+        }
+        .searchable(text: $keyword, placement: .navigationBarDrawer(displayMode: .always), prompt: "Find event..")
+        .onChange(of: keyword) { newValue in
+            if keyword.isEmpty {
+            }
         }
         .listStyle(InsetGroupedListStyle())
         .overlay(infoOverlayView)
