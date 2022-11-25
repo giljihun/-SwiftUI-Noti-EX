@@ -16,6 +16,7 @@ final class NotificationManager: ObservableObject {
     @Published private(set) var authorizationStatus: UNAuthorizationStatus?
     /* '?'(Optional) -> 옵셔널은 값이 있을 수도 있고 없을 수도 있는 변수를 정의할 때 사용된다.
       값이 없다면 'nil' 반환 */
+    @Published var searchText: String = ""
     
     func reloadLocalNotifications() {
         print("reloadLocalNotifications")
