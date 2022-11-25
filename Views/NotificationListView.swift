@@ -11,7 +11,7 @@ struct NotificationListView: View {
     @StateObject private var notificationManager = NotificationManager()
     //@StateObject -> 뷰안에서 안전하게 ObservedObject 인스턴스를 만들 수 있다.
     @State private var isCreatePresented = false
-    @State private var keyword = "" // 검색기능용
+    
     
     
     private static var notificationDateFormatter: DateFormatter = {
@@ -59,59 +59,61 @@ struct NotificationListView: View {
     }
     
     var body: some View {
-        List{
-            ForEach(notificationManager.notifications, id: \.identifier) { notification in
-                HStack {
-                    Text(notification.content.title)
-                        .fontWeight(.semibold)
-                    Text(timeDisplayText(from: notification))
-                        .fontWeight(.bold)
-                    Spacer()
+        
+        VStack {
+            
+            SearchBarView(searchText: $notificationManager.searchText)
+            
+            List{
+                ForEach(notificationManager.notifications, id: \.identifier) { notification in
+                    HStack {
+                        Text(notification.content.title)
+                            .fontWeight(.semibold)
+                        Text(timeDisplayText(from: notification))
+                            .fontWeight(.bold)
+                        Spacer()
+                    }
+                }
+                .onDelete(perform: delete)
+            }
+            
+            .listStyle(InsetGroupedListStyle())
+            .overlay(infoOverlayView)
+            .navigationTitle("언제드라?")
+            .onAppear(perform: notificationManager.reloadAuthorizationStatus)
+            .onChange(of: notificationManager.authorizationStatus) { authorizationStatus in
+                switch authorizationStatus {
+                case .notDetermined: // When First Opening App.
+                    //request authorization
+                    notificationManager.requestAuthorization()
+                case .authorized:
+                    //get local notifications
+                    notificationManager.reloadLocalNotifications()
+                default: //don't allow
+                    break
                 }
             }
-            .onDelete(perform: delete)
-        }
-        .searchable(text: $keyword, placement: .navigationBarDrawer(displayMode: .always), prompt: "Find event..")
-        .onChange(of: keyword) { newValue in
-            if keyword.isEmpty {
+            .onReceive(NotificationCenter.default.publisher(for:
+                UIApplication.willEnterForegroundNotification)) { _ in
+                notificationManager.reloadAuthorizationStatus()
             }
-        }
-        .listStyle(InsetGroupedListStyle())
-        .overlay(infoOverlayView)
-        .navigationTitle("언제드라?")
-        .onAppear(perform: notificationManager.reloadAuthorizationStatus)
-        .onChange(of: notificationManager.authorizationStatus) { authorizationStatus in
-            switch authorizationStatus {
-            case .notDetermined: // When First Opening App.
-                //request authorization
-                notificationManager.requestAuthorization()
-            case .authorized:
-                //get local notifications
-                notificationManager.reloadLocalNotifications()
-            default: //don't allow
-                break
+            .toolbar {
+                Button {
+                    isCreatePresented = true
+                } label: {
+                    Image(systemName: "plus.circle")
+                        .imageScale(.large)
+                }
             }
+            .sheet(isPresented: $isCreatePresented) {
+                NavigationView {
+                    CreateNotificationView(
+                        notificationManager: notificationManager, // !!!! 오류 해결 !!!!
+                        isPresented: $isCreatePresented
+                    )
+                }
+                .accentColor(.primary)
         }
-        .onReceive(NotificationCenter.default.publisher(for:
-            UIApplication.willEnterForegroundNotification)) { _ in
-            notificationManager.reloadAuthorizationStatus()
-        }
-        .toolbar {
-            Button {
-                isCreatePresented = true
-            } label: {
-                Image(systemName: "plus.circle")
-                    .imageScale(.large)
-            }
-        }
-        .sheet(isPresented: $isCreatePresented) {
-            NavigationView {
-                CreateNotificationView(
-                    notificationManager: notificationManager, // !!!! 오류 해결 !!!!
-                    isPresented: $isCreatePresented
-                )
-            }
-            .accentColor(.primary)
         }
     }
 }
@@ -122,11 +124,5 @@ extension NotificationListView {
             identifiers: indexSet.map { notificationManager.notifications[$0].identifier }
         )
         notificationManager.reloadLocalNotifications()
-    }
-}
-
-struct NotificationListView_Previews: PreviewProvider {
-    static var previews: some View {
-        NotificationListView()
     }
 }

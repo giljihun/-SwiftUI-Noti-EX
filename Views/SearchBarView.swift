@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SearchBarView: View {
     
-    @State var searchText: String = ""
+    @Binding var searchText: String
     
     var body: some View {
         HStack {
@@ -20,6 +20,7 @@ struct SearchBarView: View {
             
             TextField("Search by title or content...", text: $searchText)
                 .foregroundColor(Color.theme.accent)
+                .disableAutocorrection(true)
                 .overlay(
                     Image(systemName: "xmark.circle.fill")
                         .padding()
@@ -27,6 +28,8 @@ struct SearchBarView: View {
                         .foregroundColor(Color.theme.accent)
                         .opacity(searchText.isEmpty ? 0.0 : 1.0) // 값 입력에 따른 투명도 설정!
                         .onTapGesture {
+                            UIApplication.shared.endEditing()
+                            // extension - 입력에서 X를 누르면 키보드 입력창이 닫아지도록 함!
                             searchText = "" // X를 누르면 초기화되게 만들어주기!
                         }
                         , alignment: .trailing
@@ -48,14 +51,13 @@ struct SearchBarView: View {
 struct SearchBarView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            SearchBarView()
-                .preferredColorScheme(.dark)
-                .previewLayout(.sizeThatFits)
-            
-            SearchBarView()
+            SearchBarView(searchText: .constant(""))
                 .preferredColorScheme(.light)
                 .previewLayout(.sizeThatFits)
-        }
             
+            SearchBarView(searchText: .constant(""))
+                .preferredColorScheme(.dark)
+                .previewLayout(.sizeThatFits)
+        }
     }
 }
