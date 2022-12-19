@@ -12,7 +12,7 @@ struct NotificationListView: View {
     //@StateObject -> 뷰안에서 안전하게 ObservedObject 인스턴스를 만들 수 있다.
     @State private var isCreatePresented = false
     
-    
+    ////
     
     private static var notificationDateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
