@@ -8,10 +8,6 @@
 import Foundation
 import UserNotifications
 
-
-
-
-
 final class NotificationManager: ObservableObject {
     @Published private(set) var notifications: [UNNotificationRequest] = []
     /* private(set) -> 기존 private은 외부(구조체, 클래스 밖)에서 읽기, 쓰기가 불가능하다.

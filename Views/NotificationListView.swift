@@ -5,14 +5,13 @@
 //  Created by 길지훈 on 2022/11/14.
 //
 
+
 import SwiftUI
 
 struct NotificationListView: View {
     @StateObject private var notificationManager = NotificationManager()
     //@StateObject -> 뷰안에서 안전하게 ObservedObject 인스턴스를 만들 수 있다.
     @State private var isCreatePresented = false
-    
-    ////
     
     private static var notificationDateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -33,8 +32,8 @@ struct NotificationListView: View {
         case .authorized:
             if notificationManager.notifications.isEmpty {
                 InfoOverlayView(
-                    infoMessage: "No Notifications Yet",
-                    buttonTitle: "Create",
+                    infoMessage: "아직 이벤트가 생성되지 않았습니다",
+                    buttonTitle: "생성하기",
                     systemImageName: "plus.circle",
                     action: {
                         isCreatePresented = true
@@ -43,8 +42,8 @@ struct NotificationListView: View {
             }
         case .denied:
             InfoOverlayView(
-                infoMessage: "Plz Enable Permission",
-                buttonTitle: "Settings",
+                infoMessage: "권한을 허용해주세요",
+                buttonTitle: "설정",
                 systemImageName: "gear",
                 action: {
                     if let url = URL(string: UIApplication.openSettingsURLString),
@@ -63,23 +62,35 @@ struct NotificationListView: View {
         VStack {
             
             SearchBarView(searchText: $notificationManager.searchText)
+                //.background(Color.theme.accent) // 임시
+                .frame(height:90)
             
             List{
-                ForEach(notificationManager.notifications, id: \.identifier) { notification in
-                    HStack {
-                        Text(notification.content.title)
-                            .fontWeight(.semibold)
-                        Text(timeDisplayText(from: notification))
-                            .fontWeight(.bold)
-                        Spacer()
+                Section() {
+                    ForEach(notificationManager.notifications, id: \.identifier) { notification in
+                        HStack {
+                            Text(notification.content.title)
+                                .fontWeight(.semibold)
+                            
+                            Text(timeDisplayText(from: notification))
+                                .fontWeight(.bold)
+                            Spacer()
+                        }
                     }
+                    .onDelete(perform: delete)
                 }
-                .onDelete(perform: delete)
             }
-            
+            .buttonBorderShape(.capsule)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("언제드라?")
+                        .font(.largeTitle.bold())
+                        .accessibilityAddTraits(.isHeader)
+                }
+            } // 타이틀 중앙에 넣는방법.
             .listStyle(InsetGroupedListStyle())
             .overlay(infoOverlayView)
-            .navigationTitle("언제드라?")
             .onAppear(perform: notificationManager.reloadAuthorizationStatus)
             .onChange(of: notificationManager.authorizationStatus) { authorizationStatus in
                 switch authorizationStatus {
@@ -116,6 +127,7 @@ struct NotificationListView: View {
         }
         }
     }
+    
 }
 
 extension NotificationListView {
@@ -124,5 +136,12 @@ extension NotificationListView {
             identifiers: indexSet.map { notificationManager.notifications[$0].identifier }
         )
         notificationManager.reloadLocalNotifications()
+    }
+}
+
+struct NotificationListView_Previews: PreviewProvider {
+    static var previews: some View {
+        NotificationListView()
+            .preferredColorScheme(.dark)
     }
 }

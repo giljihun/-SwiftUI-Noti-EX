@@ -17,14 +17,35 @@ struct CreateNotificationView: View {
             Section {
                 VStack(spacing: 16) {
                     HStack {
-                        TextField("Notification Title", text: $title)
+     
+                        TextField("이벤트명", text: $title)
+                            .foregroundColor(Color.theme.accent)
+                            .disableAutocorrection(true)
+                            .overlay(
+                                Image(systemName: "xmark.circle.fill")
+                                    .padding()
+                                    .offset(x:60)
+                                    .foregroundColor(Color.theme.accent)
+                                    .opacity(title.isEmpty ? 0.0 : 1.0) // 값 입력에 따른 투명도 설정!
+                                    .onTapGesture {
+                                        UIApplication.shared.endEditing()
+                                        // extension - 입력에서 X를 누르면 키보드 입력창이 닫아지도록 함!
+                                        title = "" // X를 누르면 초기화되게 만들어주기!
+                                    }
+                                    , alignment: .trailing
+                        )
+                        
                         Spacer()
                         DatePicker("", selection: $date, displayedComponents: [.hourAndMinute])
                     }
                     .padding(.vertical, 8)
                     .padding(.horizontal, 12)
-                    .background(Color(.white))
+                    .background(Color.theme.background)
                     .cornerRadius(5)
+                    .foregroundColor(
+                        title.isEmpty ?
+                        Color.theme.secondaryText : Color.theme.accent)
+                    
                     
                     Button { // 'Create' 버튼
                         let dateComponents = Calendar.current.dateComponents([.hour, .minute], from: date)
@@ -36,12 +57,15 @@ struct CreateNotificationView: View {
                                 }
                             }
                         }
-                    } label: {
-                        Text("Create")
+                    }
+                    label: {
+                        Text("생성하기")
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity)
                             .contentShape(Rectangle())
+                            
                     }
+                    .disabled(title.isEmpty)
                     .padding()
                     .background(Color(.systemGray5))
                     .buttonStyle(PlainButtonStyle())
@@ -54,7 +78,7 @@ struct CreateNotificationView: View {
         .onDisappear {
             notificationManager.reloadLocalNotifications()
         }
-        .navigationTitle("Create")
+        .navigationTitle("새 이벤트")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
@@ -66,10 +90,12 @@ struct CreateNotificationView: View {
             }
         }
     }
+    
 }
 
 struct CreateNotificationView_Previews: PreviewProvider {
     static var previews: some View {
         CreateNotificationView(notificationManager: NotificationManager(), isPresented:  .constant(false))
+            .preferredColorScheme(.dark)
     }
 }

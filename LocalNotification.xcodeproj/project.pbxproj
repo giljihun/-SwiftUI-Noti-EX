@@ -48,8 +48,8 @@
 			isa = PBXGroup;
 			children = (
 				40BE7FDF29227B2100ACE7C0 /* NotificationListView.swift */,
-				407DAD882923695700CF6155 /* CreateNotificationView.swift */,
 				407DAD8A292A156D00CF6155 /* infoOverlayView.swift */,
+				407DAD882923695700CF6155 /* CreateNotificationView.swift */,
 				407DAD90292F872B00CF6155 /* SearchBarView.swift */,
 			);
 			path = Views;

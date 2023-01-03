@@ -18,7 +18,7 @@ struct SearchBarView: View {
                     searchText.isEmpty ?
                     Color.theme.secondaryText : Color.theme.accent)
             
-            TextField("Search by title or content...", text: $searchText)
+            TextField("제목 검색 또는 내용 입력", text: $searchText)
                 .foregroundColor(Color.theme.accent)
                 .disableAutocorrection(true)
                 .overlay(
