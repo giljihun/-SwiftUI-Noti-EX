@@ -83,27 +83,28 @@ struct CreateNotificationView: View {
                     } // 레이블
                     
                     Group {
-                        Text("날짜").headline()
-                
+                        Text("날짜 & 반복설정").headline()
                             DatePicker("", selection: $date, in: Date()...,
                                        displayedComponents: [.date, .hourAndMinute])
-                                        .datePickerStyle(.compact)
+                            .datePickerStyle(.compact)
                                         .environment(\.locale, Locale.init(identifier: "ko-KR"))
+                                        .labelsHidden()
                                         
-                    } // 날짜
+                    } // 날짜 및 반복 설정
                     
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
+
                     Button { // 'Create' 버튼
-                        let dateComponents = Calendar.current.dateComponents([.hour, .minute], from: date)
-                        guard let hour = dateComponents.hour, let minute = dateComponents.minute else { return }
-                        notificationManager.createLocalNotification(title: title, hour: hour, minute: minute) { error in
+                        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: date)
+                        guard let year = dateComponents.year,
+                              let month = dateComponents.month,
+                              let day = dateComponents.day,
+                              let hour = dateComponents.hour,
+                              let minute = dateComponents.minute
+                        else { return }
+                        
+                        notificationManager.createLocalNotification(title: title, label: label,
+                                                                    year: year, month: month, day: day,
+                                                                    hour: hour, minute: minute) { error in
                             if error == nil {
                                 DispatchQueue.main.async {
                                     self.isPresented = false
