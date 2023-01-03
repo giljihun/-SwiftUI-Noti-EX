@@ -13,6 +13,7 @@
 		407DAD93292F8B0F00CF6155 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407DAD92292F8B0F00CF6155 /* Color.swift */; };
 		407DAD952930A12D00CF6155 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407DAD942930A12D00CF6155 /* UIApplication.swift */; };
 		40B2BFF42963F052008B05DE /* Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2BFF32963F052008B05DE /* Text.swift */; };
+		40B2BFF629641F92008B05DE /* Toggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2BFF529641F92008B05DE /* Toggle.swift */; };
 		40BE7FD02920EE1D00ACE7C0 /* LocalNotificationApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40BE7FCF2920EE1D00ACE7C0 /* LocalNotificationApp.swift */; };
 		40BE7FD42920EE2200ACE7C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40BE7FD32920EE2200ACE7C0 /* Assets.xcassets */; };
 		40BE7FD72920EE2200ACE7C0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40BE7FD62920EE2200ACE7C0 /* Preview Assets.xcassets */; };
@@ -27,6 +28,7 @@
 		407DAD92292F8B0F00CF6155 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		407DAD942930A12D00CF6155 /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
 		40B2BFF32963F052008B05DE /* Text.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Text.swift; sourceTree = "<group>"; };
+		40B2BFF529641F92008B05DE /* Toggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toggle.swift; sourceTree = "<group>"; };
 		40BE7FCC2920EE1D00ACE7C0 /* LocalNotification.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocalNotification.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		40BE7FCF2920EE1D00ACE7C0 /* LocalNotificationApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationApp.swift; sourceTree = "<group>"; };
 		40BE7FD32920EE2200ACE7C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -64,6 +66,7 @@
 				407DAD92292F8B0F00CF6155 /* Color.swift */,
 				407DAD942930A12D00CF6155 /* UIApplication.swift */,
 				40B2BFF32963F052008B05DE /* Text.swift */,
+				40B2BFF529641F92008B05DE /* Toggle.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -181,6 +184,7 @@
 				40B2BFF42963F052008B05DE /* Text.swift in Sources */,
 				40BE7FE029227B2100ACE7C0 /* NotificationListView.swift in Sources */,
 				407DAD892923695700CF6155 /* CreateNotificationView.swift in Sources */,
+				40B2BFF629641F92008B05DE /* Toggle.swift in Sources */,
 				407DAD91292F872B00CF6155 /* SearchBarView.swift in Sources */,
 				407DAD8B292A156D00CF6155 /* infoOverlayView.swift in Sources */,
 			);

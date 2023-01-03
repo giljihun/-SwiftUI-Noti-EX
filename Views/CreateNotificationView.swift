@@ -12,48 +12,18 @@ struct CreateNotificationView: View {
     @State private var title = ""
     @State private var label = ""
     @State private var date = Date()
+    @State private var repeats = false
     @Binding var isPresented: Bool
     var body: some View {
         List {
             Section {
                 VStack(spacing: 16) {
                     
-                    Group {
-                        Text("이벤트명").headline()
-                    HStack {
-                        TextField("제목을 입력하세요...", text: $title)
-                            .foregroundColor(Color.theme.accent)
-                            .disableAutocorrection(true)
-                            .overlay(
-                                Image(systemName: "xmark.circle.fill")
-                                    .padding()
-                                    .offset(x:60)
-                                    .foregroundColor(Color.theme.accent)
-                                    .opacity(title.isEmpty ? 0.0 : 1.0) // 값 입력에 따른 투명도 설정!
-                                    .onTapGesture {
-                                        UIApplication.shared.endEditing()
-                                        // extension - 입력에서 X를 누르면 키보드 입력창이 닫아지도록 함!
-                                        title = "" // X를 누르면 초기화되게 만들어주기!
-                                    }
-                                    , alignment: .trailing
-                        )
-                        
-                        Spacer()
-                        
-                    }
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 12)
-                    .background(Color.theme.background)
-                    .cornerRadius(5)
-                    .foregroundColor(
-                        title.isEmpty ?
-                        Color.theme.secondaryText : Color.theme.accent)
-                    } // 타이틀
-                    
-                    Group {
-                        Text("레이블").headline()
+                    GroupBox {
+                        Group {
+                            Text("이벤트명").headline()
                         HStack {
-                            TextField("전달 받을 내용을 입력하세요...", text: $label)
+                            TextField("제목을 입력하세요...", text: $title)
                                 .foregroundColor(Color.theme.accent)
                                 .disableAutocorrection(true)
                                 .overlay(
@@ -65,7 +35,7 @@ struct CreateNotificationView: View {
                                         .onTapGesture {
                                             UIApplication.shared.endEditing()
                                             // extension - 입력에서 X를 누르면 키보드 입력창이 닫아지도록 함!
-                                            label = "" // X를 누르면 초기화되게 만들어주기!
+                                            title = "" // X를 누르면 초기화되게 만들어주기!
                                         }
                                         , alignment: .trailing
                             )
@@ -80,18 +50,66 @@ struct CreateNotificationView: View {
                         .foregroundColor(
                             title.isEmpty ?
                             Color.theme.secondaryText : Color.theme.accent)
-                    } // 레이블
+                        } // 타이틀
+                        
+                        Group {
+                            Text("레이블").headline()
+                            HStack {
+                                TextField("전달 받을 내용을 입력하세요...", text: $label)
+                                    .foregroundColor(Color.theme.accent)
+                                    .disableAutocorrection(true)
+                                    .overlay(
+                                        Image(systemName: "xmark.circle.fill")
+                                            .padding()
+                                            .offset(x:60)
+                                            .foregroundColor(Color.theme.accent)
+                                            .opacity(title.isEmpty ? 0.0 : 1.0) // 값 입력에 따른 투명도 설정!
+                                            .onTapGesture {
+                                                UIApplication.shared.endEditing()
+                                                // extension - 입력에서 X를 누르면 키보드 입력창이 닫아지도록 함!
+                                                label = "" // X를 누르면 초기화되게 만들어주기!
+                                            }
+                                            , alignment: .trailing
+                                )
+                                
+                                Spacer()
+                                
+                            }
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 12)
+                            .background(Color.theme.background)
+                            .cornerRadius(5)
+                            .foregroundColor(
+                                title.isEmpty ?
+                                Color.theme.secondaryText : Color.theme.accent)
+                        } // 레이블
+                    }
                     
-                    Group {
-                        Text("날짜 & 반복설정").headline()
-                            DatePicker("", selection: $date, in: Date()...,
-                                       displayedComponents: [.date, .hourAndMinute])
-                            .datePickerStyle(.compact)
-                                        .environment(\.locale, Locale.init(identifier: "ko-KR"))
-                                        .labelsHidden()
-                                        
-                    } // 날짜 및 반복 설정
-                    
+                    GroupBox {
+                        Group {
+                            Text("첫 알림을 받을 날").headline()
+                                
+                                DatePicker("", selection: $date, in: Date()...,
+                                               displayedComponents: [.date, .hourAndMinute])
+                                    .datePickerStyle(.compact)
+                                                .environment(\.locale, Locale.init(identifier: "ko-KR"))
+                                            .labelsHidden()
+                        } // 날짜
+                            Text("반복").headline()
+                            Toggle("", isOn: $repeats)
+                                .confirmationDialog("알람 주기 설정", isPresented: $repeats,
+                                    actions: {
+                                    
+                                    Button("매 일") {}
+                                    Button("매 주") {}
+                                    Button("매 달") {}
+                                    Button("매 년") {}
+                                    Button("취 소", role: .cancel) {}
+                                    
+                                }
+                            )
+                        }
+                
 
                     Button { // 'Create' 버튼
                         let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: date)
