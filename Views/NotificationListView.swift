@@ -58,8 +58,8 @@ struct NotificationListView: View {
     }
     
     var body: some View {
-        
-        VStack {
+        NavigationView {
+            VStack {
             
             SearchBarView(searchText: $notificationManager.searchText)
                 //.background(Color.theme.accent) // 임시
@@ -126,8 +126,8 @@ struct NotificationListView: View {
                 .accentColor(.primary)
         }
         }
+        }
     }
-    
 }
 
 extension NotificationListView {

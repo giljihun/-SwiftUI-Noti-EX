@@ -18,7 +18,6 @@ struct CreateNotificationView: View {
         List {
             Section {
                 VStack(spacing: 16) {
-                    
                     GroupBox {
                         Group {
                             Text("이벤트명")
@@ -83,10 +82,10 @@ struct CreateNotificationView: View {
                                 title.isEmpty ?
                                 Color.theme.secondaryText : Color.theme.accent)
                         } // 레이블
-                    }
+                    } // 레이블 & 타이틀 설정
                     
                     GroupBox {
-                        Group {
+                        Section(){
                             Text("첫 알림을 받을 날")
                                 
                                 DatePicker("", selection: $date, in: Date()...,
@@ -99,52 +98,46 @@ struct CreateNotificationView: View {
                             Text("반복")
                         
                             Toggle("", isOn: $repeats)
-                                .confirmationDialog("알람 주기 설정", isPresented: $repeats,
-                                    actions: {
-                                    
-                                    Button("매 일") {}
-                                    Button("매 주") {}
-                                    Button("매 달") {}
-                                    Button("매 년") {}
-                                    Button("취 소", role: .cancel) {}
-                                    
-                                }
-                            )
                         }
-                    }
-                
-
-                    Button { // 'Create' 버튼
-                        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: date)
-                        guard let year = dateComponents.year,
-                              let month = dateComponents.month,
-                              let day = dateComponents.day,
-                              let hour = dateComponents.hour,
-                              let minute = dateComponents.minute
-                        else { return }
-                        
-                        notificationManager.createLocalNotification(title: title, label: label,
-                                                                    year: year, month: month, day: day,
-                                                                    hour: hour, minute: minute) { error in
-                            if error == nil {
-                                DispatchQueue.main.async {
-                                    self.isPresented = false
+                        if repeats {
+                            //
+                            Text("안녕하세요")
+                            
+                        }
+                    } // 알림 & 반복 설정
+                    Group {
+                        Button {
+                            let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: date)
+                            guard let year = dateComponents.year,
+                                  let month = dateComponents.month,
+                                  let day = dateComponents.day,
+                                  let hour = dateComponents.hour,
+                                  let minute = dateComponents.minute
+                            else { return }
+                            
+                            notificationManager.createLocalNotification(title: title, label: label,
+                                                                        year: year, month: month, day: day,
+                                                                        hour: hour, minute: minute) { error in
+                                if error == nil {
+                                    DispatchQueue.main.async {
+                                        self.isPresented = false
+                                    }
                                 }
                             }
                         }
-                    }
-                    label: {
-                        Text("생성하기")
-                            .fontWeight(.semibold)
-                            .frame(maxWidth: .infinity)
-                            .contentShape(Rectangle())
-                            
-                    }
-                    .disabled(title.isEmpty)
-                    .padding()
-                    .background(Color(.systemGray5))
-                    .buttonStyle(PlainButtonStyle())
-                    .cornerRadius(5)
+                        label: {
+                            Text("생성하기")
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity)
+                                .contentShape(Rectangle())
+                                
+                        }
+                        .disabled(title.isEmpty)
+                        .padding()
+                        .background(Color(.systemGray5))
+                        .buttonStyle(PlainButtonStyle())
+                        .cornerRadius(5)
+                    } // 생성 버튼
                 }
                 .listRowBackground(Color(.systemGroupedBackground))
             }
