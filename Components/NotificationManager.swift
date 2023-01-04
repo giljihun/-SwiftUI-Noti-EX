@@ -55,7 +55,7 @@ final class NotificationManager: ObservableObject {
         dateComponents.minute = minute
         
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-        
+
         let notificationContent = UNMutableNotificationContent()
         notificationContent.title = title
         notificationContent.body = label

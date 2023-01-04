@@ -21,7 +21,7 @@ struct CreateNotificationView: View {
                     
                     GroupBox {
                         Group {
-                            Text("이벤트명").headline()
+                            Text("이벤트명")
                         HStack {
                             TextField("제목을 입력하세요...", text: $title)
                                 .foregroundColor(Color.theme.accent)
@@ -53,7 +53,7 @@ struct CreateNotificationView: View {
                         } // 타이틀
                         
                         Group {
-                            Text("레이블").headline()
+                            Text("레이블")
                             HStack {
                                 TextField("전달 받을 내용을 입력하세요...", text: $label)
                                     .foregroundColor(Color.theme.accent)
@@ -87,7 +87,7 @@ struct CreateNotificationView: View {
                     
                     GroupBox {
                         Group {
-                            Text("첫 알림을 받을 날").headline()
+                            Text("첫 알림을 받을 날")
                                 
                                 DatePicker("", selection: $date, in: Date()...,
                                                displayedComponents: [.date, .hourAndMinute])
@@ -95,7 +95,9 @@ struct CreateNotificationView: View {
                                                 .environment(\.locale, Locale.init(identifier: "ko-KR"))
                                             .labelsHidden()
                         } // 날짜
-                            Text("반복").headline()
+                        HStack {
+                            Text("반복")
+                        
                             Toggle("", isOn: $repeats)
                                 .confirmationDialog("알람 주기 설정", isPresented: $repeats,
                                     actions: {
@@ -109,6 +111,7 @@ struct CreateNotificationView: View {
                                 }
                             )
                         }
+                    }
                 
 
                     Button { // 'Create' 버튼
