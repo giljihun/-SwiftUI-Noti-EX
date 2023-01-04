@@ -59,14 +59,14 @@ struct NotificationListView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
+            VStack(spacing: -7) {
             
-            SearchBarView(searchText: $notificationManager.searchText)
+                SearchBarView(searchText: $notificationManager.searchText)
+                    .padding(.bottom)
                 //.background(Color.theme.accent) // 임시
                 .frame(height:90)
-            
+
             List{
-                Section() {
                     ForEach(notificationManager.notifications, id: \.identifier) { notification in
                         HStack {
                             Text(notification.content.title)
@@ -78,9 +78,7 @@ struct NotificationListView: View {
                         }
                     }
                     .onDelete(perform: delete)
-                }
             }
-            .buttonBorderShape(.capsule)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
@@ -89,7 +87,7 @@ struct NotificationListView: View {
                         .accessibilityAddTraits(.isHeader)
                 }
             } // 타이틀 중앙에 넣는방법.
-            .listStyle(InsetGroupedListStyle())
+            .listStyle(.plain)
             .overlay(infoOverlayView)
             .onAppear(perform: notificationManager.reloadAuthorizationStatus)
             .onChange(of: notificationManager.authorizationStatus) { authorizationStatus in
@@ -142,6 +140,5 @@ extension NotificationListView {
 struct NotificationListView_Previews: PreviewProvider {
     static var previews: some View {
         NotificationListView()
-            .preferredColorScheme(.dark)
     }
 }
