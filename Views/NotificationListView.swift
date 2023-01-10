@@ -140,5 +140,6 @@ extension NotificationListView {
 struct NotificationListView_Previews: PreviewProvider {
     static var previews: some View {
         NotificationListView()
+            .preferredColorScheme(.dark)
     }
 }
