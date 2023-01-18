@@ -15,7 +15,7 @@ struct NotificationListView: View {
     
     private static var notificationDateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
-        dateFormatter.timeStyle = .short
+        dateFormatter.dateFormat = "yyyy-MM-dd [HH:mm]"
         return dateFormatter
     }()
     
@@ -68,8 +68,11 @@ struct NotificationListView: View {
 
             List{
                     ForEach(notificationManager.notifications, id: \.identifier) { notification in
-                        HStack {
+                        VStack {
                             Text(notification.content.title)
+                                .fontWeight(.bold)
+                            
+                            Text(notification.content.body)
                                 .fontWeight(.semibold)
                             
                             Text(timeDisplayText(from: notification))
@@ -78,7 +81,9 @@ struct NotificationListView: View {
                         }
                     }
                     .onDelete(perform: delete)
+                    .onMove(perform: move)
             }
+
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
@@ -134,6 +139,10 @@ extension NotificationListView {
             identifiers: indexSet.map { notificationManager.notifications[$0].identifier }
         )
         notificationManager.reloadLocalNotifications()
+    }
+    
+    func move(from source: IndexSet, to destination: Int) {
+        notificationManager.notifications.move(fromOffsets: source, toOffset: destination)
     }
 }
 
