@@ -10,6 +10,7 @@ import SwiftUI
 struct SearchBarView: View {
     
     @Binding var searchText: String
+    @State var editText : Bool = false
     
     var body: some View {
         HStack {
@@ -18,7 +19,7 @@ struct SearchBarView: View {
                     searchText.isEmpty ?
                     Color.theme.secondaryText : Color.theme.accent)
             
-            TextField("제목 검색 또는 내용 입력", text: $searchText)
+            TextField("제목 검색 또는 내용 입력", text: self.$searchText)
                 .foregroundColor(Color.theme.accent)
                 .disableAutocorrection(true)
                 .overlay(
@@ -46,6 +47,7 @@ struct SearchBarView: View {
         )
         .padding()
     }
+       
 }
 
 struct SearchBarView_Previews: PreviewProvider {
