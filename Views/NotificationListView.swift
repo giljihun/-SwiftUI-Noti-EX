@@ -69,24 +69,28 @@ struct NotificationListView: View {
             
             // content layer
             NavigationView {
-                    List{
+                ScrollView {
+                    VStack(spacing: 16) {
                         ForEach(notificationManager.notifications, id: \.self) { notification in
-                            VStack(alignment: .leading) {
+                            VStack(alignment: .leading, spacing: 8) {
                                 Text(notification.content.title)
                                     .font(.system(size: 20, weight: .bold, design: .default))
                                     .lineLimit(1)
-                                HStack {
-                                    Text(timeDisplayText(from: notification))
-                                        .font(.system(size: 14, weight: .ultraLight, design: .default))
-                                        .lineLimit(1)
-                                    Text(notification.content.body)
-                                        .font(.system(size: 14, weight: .ultraLight, design: .default))
-                                        .lineLimit(1)
-                                        .allowsTightening(true)
-                                }
+                                Text(notification.content.body)
+                                    .font(.system(size: 14, weight: .ultraLight, design: .default))
+                                    .lineLimit(1)
+                                    .allowsTightening(true)
+                                Text(timeDisplayText(from: notification))
+                                    .font(.system(size: 14, weight: .ultraLight, design: .default))
+                                    .lineLimit(1)
                             }
+                            .padding(16)
+                            .background(Color.white)
+                            .cornerRadius(8)
+                            .shadow(radius: 2, x: 0, y: 1)
+                            .frame(maxWidth: .infinity)
                         }
-                        .onDelete(perform: delete)
+                    }
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
