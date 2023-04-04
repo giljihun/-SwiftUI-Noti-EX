@@ -13,8 +13,12 @@ struct CreateNotificationView: View {
     @State private var label = ""
     @State private var date = Date()
     @State private var repeats = false
+    @State var days = 1
+    @State private var editingDays: String = ""
     @Binding var isPresented: Bool
+    
     var body: some View {
+        
         List {
             Section {
                 VStack(spacing: 16) {
@@ -84,7 +88,6 @@ struct CreateNotificationView: View {
                         } // 레이블
                     } // 레이블 & 타이틀 설정
                     
-                    GroupBox {
                         Section(){
                             Text("첫 알림을 받을 날")
                                 
@@ -95,16 +98,76 @@ struct CreateNotificationView: View {
                                             .labelsHidden()
                         } // 날짜
                         HStack {
-                            Text("반복")
-                        
+                            Spacer()
+                            Text("반복 설정")
+                            
                             Toggle("", isOn: $repeats)
                         }
+                    
                         if repeats {
-                            //
-                            Text("안녕하세요")
+                            HStack(alignment: .lastTextBaseline, spacing: 10) {
+                                Text("\(days)일")
+                                    .font(.system(size: 36))
+                                    .fontWeight(.bold)
+                                Text("마다 반복")
+                                    .font(.subheadline)
+                            }
                             
+                            VStack {
+                                HStack {
+                                    Button(action: { days += 1 }) {
+                                        Text("+ 1")
+                                            .fontWeight(.bold)
+                                    }
+                                    .buttonStyle(StepperButtonStyle())
+                                    
+                                    Button(action: { days += 10 }) {
+                                        Text("+ 10")
+                                            .fontWeight(.bold)
+                                    }
+                                    .buttonStyle(StepperButtonStyle())
+                                    
+                                    Button(action: { days += 100 }) {
+                                        Text("+ 100")
+                                            .fontWeight(.bold)
+                                    }
+                                    .buttonStyle(StepperButtonStyle())
+                                }
+                                
+                                HStack {
+                                    Button(action: {
+                                        if days > 1 {
+                                            days -= 1
+                                        }
+                                    }) {
+                                        Text("- 1")
+                                            .fontWeight(.bold)
+                                    }
+                                    .buttonStyle(StepperButtonStyle2())
+                                    
+                                    Button(action: {
+                                        if days > 10 {
+                                            days -= 10
+                                        }
+                                    }) {
+                                        Text("- 10")
+                                            .fontWeight(.bold)
+                                    }
+                                    .buttonStyle(StepperButtonStyle2())
+                                    
+                                    Button(action: {
+                                        if days > 100 {
+                                            days -= 100
+                                        }
+                                    }) {
+                                        Text("- 100")
+                                            .fontWeight(.bold)
+                                    }
+                                    .buttonStyle(StepperButtonStyle2())
+                                }
+                            }
                         }
-                    } // 알림 & 반복 설정
+                    // 알림 & 반복 설정
                     Group {
                         Button {
                             let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: date)
@@ -158,7 +221,6 @@ struct CreateNotificationView: View {
             }
         }
     }
-    
 }
 
 struct CreateNotificationView_Previews: PreviewProvider {
@@ -167,3 +229,28 @@ struct CreateNotificationView_Previews: PreviewProvider {
             .preferredColorScheme(.dark)
     }
 }
+
+struct StepperButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.headline)
+            .foregroundColor(.white)
+            .padding(.horizontal, 18.3)
+            .padding(.vertical, 15)
+            .background(configuration.isPressed ? Color.gray : Color.blue)
+            .cornerRadius(10)
+    }
+}
+
+struct StepperButtonStyle2: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.headline)
+            .foregroundColor(.white)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 15)
+            .background(configuration.isPressed ? Color.gray : Color.red)
+            .cornerRadius(10)
+    }
+}
+

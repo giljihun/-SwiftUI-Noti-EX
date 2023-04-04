@@ -12,6 +12,8 @@ struct NotificationListView: View {
     @StateObject private var notificationManager = NotificationManager()
     //@StateObject -> 뷰안에서 안전하게 ObservedObject 인스턴스를 만들 수 있다.
     @State private var isCreatePresented = false
+    @State private var searchText = ""
+    @State private var savedTime = ""
     
     private static var notificationDateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -20,8 +22,10 @@ struct NotificationListView: View {
     }()
     
     private func timeDisplayText(from notification: UNNotificationRequest) -> String {
-        guard let nextTriggerDate = (notification.trigger as?
-                                     UNCalendarNotificationTrigger)?.nextTriggerDate() else { return "" }
+        
+        guard let nextTriggerDate = (notification.trigger as? UNCalendarNotificationTrigger)?.nextTriggerDate()
+        else { return "확인된 알림" }
+        
         return Self.notificationDateFormatter.string(from: nextTriggerDate)
     }
     
@@ -58,77 +62,77 @@ struct NotificationListView: View {
     }
     
     var body: some View {
-        NavigationView {
-            VStack(spacing: -7) {
+        ZStack {
+            //background layer
+            Color.theme.background
+                .ignoresSafeArea()
             
-                SearchBarView(searchText: $notificationManager.searchText)
-                    .padding(.bottom)
-                //.background(Color.theme.accent) // 임시
-                .frame(height:90)
-
-            List{
-                    ForEach(notificationManager.notifications, id: \.identifier) { notification in
-                        VStack {
-                            Text(notification.content.title)
-                                .fontWeight(.bold)
-                            
-                            Text(notification.content.body)
-                                .fontWeight(.semibold)
-                            
-                            Text(timeDisplayText(from: notification))
-                                .fontWeight(.bold)
-                            Spacer()
+            // content layer
+            NavigationView {
+                    List{
+                        ForEach(notificationManager.notifications, id: \.self) { notification in
+                            VStack(alignment: .leading) {
+                                Text(notification.content.title)
+                                    .font(.system(size: 20, weight: .bold, design: .default))
+                                    .lineLimit(1)
+                                HStack {
+                                    Text(timeDisplayText(from: notification))
+                                        .font(.system(size: 14, weight: .ultraLight, design: .default))
+                                        .lineLimit(1)
+                                    Text(notification.content.body)
+                                        .font(.system(size: 14, weight: .ultraLight, design: .default))
+                                        .lineLimit(1)
+                                        .allowsTightening(true)
+                                }
+                            }
                         }
+                        .onDelete(perform: delete)
+                }
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        Text("언제드라?")
+                            .font(.largeTitle.bold())
+                            .accessibilityAddTraits(.isHeader)
                     }
-                    .onDelete(perform: delete)
-                    .onMove(perform: move)
-            }
-
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Text("언제드라?")
-                        .font(.largeTitle.bold())
-                        .accessibilityAddTraits(.isHeader)
+                } // 타이틀 중앙에 넣는방법.
+                .listStyle(InsetListStyle())
+                .overlay(infoOverlayView)
+                .onAppear(perform: notificationManager.reloadAuthorizationStatus)
+                .onChange(of: notificationManager.authorizationStatus) { authorizationStatus in
+                    switch authorizationStatus {
+                    case .notDetermined: // When First Opening App.
+                        //request authorization
+                        notificationManager.requestAuthorization()
+                    case .authorized:
+                        //get local notifications
+                        notificationManager.reloadLocalNotifications()
+                    default: //don't allow
+                        break
+                    }
                 }
-            } // 타이틀 중앙에 넣는방법.
-            .listStyle(.plain)
-            .overlay(infoOverlayView)
-            .onAppear(perform: notificationManager.reloadAuthorizationStatus)
-            .onChange(of: notificationManager.authorizationStatus) { authorizationStatus in
-                switch authorizationStatus {
-                case .notDetermined: // When First Opening App.
-                    //request authorization
-                    notificationManager.requestAuthorization()
-                case .authorized:
-                    //get local notifications
-                    notificationManager.reloadLocalNotifications()
-                default: //don't allow
-                    break
+                .onReceive(NotificationCenter.default.publisher(for:
+                    UIApplication.willEnterForegroundNotification)) { _ in
+                    notificationManager.reloadAuthorizationStatus()
+                }
+                .toolbar {
+                    Button {
+                        isCreatePresented = true
+                    } label: {
+                        Image(systemName: "plus.circle")
+                            .imageScale(.large)
+                    }
+                }
+                .sheet(isPresented: $isCreatePresented) {
+                    NavigationView {
+                        CreateNotificationView(
+                            notificationManager: notificationManager, // !!!! 오류 해결 !!!!
+                            isPresented: $isCreatePresented
+                        )
+                    }
+                    .accentColor(.primary)
                 }
             }
-            .onReceive(NotificationCenter.default.publisher(for:
-                UIApplication.willEnterForegroundNotification)) { _ in
-                notificationManager.reloadAuthorizationStatus()
-            }
-            .toolbar {
-                Button {
-                    isCreatePresented = true
-                } label: {
-                    Image(systemName: "plus.circle")
-                        .imageScale(.large)
-                }
-            }
-            .sheet(isPresented: $isCreatePresented) {
-                NavigationView {
-                    CreateNotificationView(
-                        notificationManager: notificationManager, // !!!! 오류 해결 !!!!
-                        isPresented: $isCreatePresented
-                    )
-                }
-                .accentColor(.primary)
-        }
-        }
         }
     }
 }
@@ -140,10 +144,6 @@ extension NotificationListView {
         )
         notificationManager.reloadLocalNotifications()
     }
-    
-    func move(from source: IndexSet, to destination: Int) {
-        notificationManager.notifications.move(fromOffsets: source, toOffset: destination)
-    }
 }
 
 struct NotificationListView_Previews: PreviewProvider {
@@ -152,3 +152,5 @@ struct NotificationListView_Previews: PreviewProvider {
             .preferredColorScheme(.dark)
     }
 }
+
+

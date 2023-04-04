@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		407DAD892923695700CF6155 /* CreateNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407DAD882923695700CF6155 /* CreateNotificationView.swift */; };
 		407DAD8B292A156D00CF6155 /* infoOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407DAD8A292A156D00CF6155 /* infoOverlayView.swift */; };
-		407DAD91292F872B00CF6155 /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407DAD90292F872B00CF6155 /* SearchBarView.swift */; };
 		407DAD93292F8B0F00CF6155 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407DAD92292F8B0F00CF6155 /* Color.swift */; };
 		407DAD952930A12D00CF6155 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407DAD942930A12D00CF6155 /* UIApplication.swift */; };
 		40B2BFF42963F052008B05DE /* Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2BFF32963F052008B05DE /* Text.swift */; };
@@ -24,7 +23,6 @@
 /* Begin PBXFileReference section */
 		407DAD882923695700CF6155 /* CreateNotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNotificationView.swift; sourceTree = "<group>"; };
 		407DAD8A292A156D00CF6155 /* infoOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = infoOverlayView.swift; sourceTree = "<group>"; };
-		407DAD90292F872B00CF6155 /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
 		407DAD92292F8B0F00CF6155 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		407DAD942930A12D00CF6155 /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
 		40B2BFF32963F052008B05DE /* Text.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Text.swift; sourceTree = "<group>"; };
@@ -54,7 +52,6 @@
 				40BE7FDF29227B2100ACE7C0 /* NotificationListView.swift */,
 				407DAD8A292A156D00CF6155 /* infoOverlayView.swift */,
 				407DAD882923695700CF6155 /* CreateNotificationView.swift */,
-				407DAD90292F872B00CF6155 /* SearchBarView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -185,7 +182,6 @@
 				40BE7FE029227B2100ACE7C0 /* NotificationListView.swift in Sources */,
 				407DAD892923695700CF6155 /* CreateNotificationView.swift in Sources */,
 				40B2BFF629641F92008B05DE /* Toggle.swift in Sources */,
-				407DAD91292F872B00CF6155 /* SearchBarView.swift in Sources */,
 				407DAD8B292A156D00CF6155 /* infoOverlayView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -7,6 +7,7 @@
 
 import Foundation
 import UserNotifications
+import Combine
 
 final class NotificationManager: ObservableObject {
     @Published private(set) var notifications: [UNNotificationRequest] = []
@@ -43,7 +44,6 @@ final class NotificationManager: ObservableObject {
         }
     }
     
-    
     func createLocalNotification(title: String, label: String, year: Int, month: Int, day: Int, hour: Int, minute: Int, completion:
         @escaping (Error?) -> Void){
         
@@ -54,15 +54,20 @@ final class NotificationManager: ObservableObject {
         dateComponents.hour = hour
         dateComponents.minute = minute
         
+        // 알림 발송 조건 객체
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+        
 
+        // 로컬알림에 대한 속성 설정 가능
         let notificationContent = UNMutableNotificationContent()
         notificationContent.title = title
         notificationContent.body = label
         notificationContent.sound = .default
         
+        // 알림 요청 객체
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: trigger)
         
+        // 노티센터에 추가
         UNUserNotificationCenter.current().add(request, withCompletionHandler: completion)
     
     }
@@ -71,6 +76,5 @@ final class NotificationManager: ObservableObject {
         UNUserNotificationCenter.current()
             .removePendingNotificationRequests(withIdentifiers: identifiers)
     }
-    
     
 }
