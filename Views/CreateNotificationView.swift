@@ -6,6 +6,9 @@
 //
 
 import SwiftUI
+import Combine
+
+let maxCharacterLength = Int(15)
 
 struct CreateNotificationView: View {
     @ObservedObject var notificationManager: NotificationManager
@@ -42,9 +45,12 @@ struct CreateNotificationView: View {
                                         }
                                         , alignment: .trailing
                             )
-                            
+                                .onReceive(Just(title), perform: { _ in
+                                    if maxCharacterLength < title.count {
+                                        title = String(title.prefix(maxCharacterLength))
+                                    }
+                                })
                             Spacer()
-                            
                         }
                         .padding(.vertical, 8)
                         .padding(.horizontal, 12)
@@ -74,6 +80,11 @@ struct CreateNotificationView: View {
                                             }
                                             , alignment: .trailing
                                 )
+                                    .onReceive(Just(label), perform: { _ in
+                                        if maxCharacterLength < label.count {
+                                            label = String(label.prefix(maxCharacterLength))
+                                        }
+                                    })
                                 
                                 Spacer()
                                 
@@ -221,6 +232,7 @@ struct CreateNotificationView: View {
             }
         }
     }
+    
 }
 
 struct CreateNotificationView_Previews: PreviewProvider {

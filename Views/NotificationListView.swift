@@ -88,9 +88,10 @@ struct NotificationListView: View {
                             .background(Color.white)
                             .cornerRadius(8)
                             .shadow(radius: 2, x: 0, y: 1)
-                            .frame(maxWidth: .infinity)
+                            .frame(width: UIScreen.main.bounds.width - 32)
                         }
                     }
+                    .padding(16)
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -101,7 +102,6 @@ struct NotificationListView: View {
                     }
                 } // 타이틀 중앙에 넣는방법.
                 .listStyle(InsetListStyle())
-                .overlay(infoOverlayView)
                 .onAppear(perform: notificationManager.reloadAuthorizationStatus)
                 .onChange(of: notificationManager.authorizationStatus) { authorizationStatus in
                     switch authorizationStatus {
@@ -137,6 +137,7 @@ struct NotificationListView: View {
                     .accentColor(.primary)
                 }
             }
+            .overlay(infoOverlayView)
         }
     }
 }
@@ -153,7 +154,6 @@ extension NotificationListView {
 struct NotificationListView_Previews: PreviewProvider {
     static var previews: some View {
         NotificationListView()
-            .preferredColorScheme(.dark)
     }
 }
 
