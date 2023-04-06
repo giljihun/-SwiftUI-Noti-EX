@@ -17,6 +17,11 @@ final class NotificationManager: ObservableObject {
     /* '?'(Optional) -> 옵셔널은 값이 있을 수도 있고 없을 수도 있는 변수를 정의할 때 사용된다.
       값이 없다면 'nil' 반환 */
     @Published var searchText: String = ""
+    @Published var selectedNotifications: [UNNotificationRequest] = []
+
+    func remove(notification: UNNotificationRequest) {
+        notifications.removeAll(where: { $0 == notification })
+    }
     
     func reloadLocalNotifications() {
         print("reloadLocalNotifications")
@@ -77,4 +82,9 @@ final class NotificationManager: ObservableObject {
             .removePendingNotificationRequests(withIdentifiers: identifiers)
     }
     
+    func remove(_ notification: UNNotificationRequest) {
+        if let index = notifications.firstIndex(of: notification) {
+            notifications.remove(at: index)
+        }
+    }
 }

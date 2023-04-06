@@ -15,6 +15,23 @@ struct NotificationListView: View {
     @State private var searchText = ""
     @State private var savedTime = ""
     
+    // EditMode 활성화 상태 변수 추가
+    @State private var isEditing = false
+        
+    // 선택한 아이템을 추적하기 위한 set
+    @State private var selectedNotifications = Set<UNNotificationRequest>()
+    
+    var filteredList: [UNNotificationRequest] {
+            if searchText.isEmpty {
+                return notificationManager.notifications
+            } else {
+                return notificationManager.notifications.filter { notification in
+                    notification.content.title.localizedCaseInsensitiveContains(searchText) || notification.content.body.localizedCaseInsensitiveContains(searchText)
+                }
+            }
+        }
+    
+    // dateformat하기
     private static var notificationDateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd [HH:mm]"
@@ -62,6 +79,7 @@ struct NotificationListView: View {
     }
     
     var body: some View {
+        
         ZStack {
             //background layer
             Color.theme.background
@@ -69,29 +87,38 @@ struct NotificationListView: View {
             
             // content layer
             NavigationView {
-                ScrollView {
-                    VStack(spacing: 16) {
-                        ForEach(notificationManager.notifications, id: \.self) { notification in
+                VStack(spacing: 16) {
+                    List {
+                        ForEach(filteredList, id: \.self) { notification in
                             VStack(alignment: .leading, spacing: 8) {
                                 Text(notification.content.title)
                                     .font(.system(size: 20, weight: .bold, design: .default))
+                                    .frame(width: UIScreen.main.bounds.width - 100, alignment: .leading)
                                     .lineLimit(1)
+                                    .minimumScaleFactor(0.5)
+                                    .truncationMode(.tail)
                                 Text(notification.content.body)
-                                    .font(.system(size: 14, weight: .ultraLight, design: .default))
+                                    .frame(width: UIScreen.main.bounds.width - 100, alignment: .leading)
                                     .lineLimit(1)
+                                    .minimumScaleFactor(0.5)
+                                    .truncationMode(.tail)
                                     .allowsTightening(true)
                                 Text(timeDisplayText(from: notification))
                                     .font(.system(size: 14, weight: .ultraLight, design: .default))
+                                    .frame(width: UIScreen.main.bounds.width - 100, alignment: .leading)
                                     .lineLimit(1)
+                                    .minimumScaleFactor(0.5)
+                                    .truncationMode(.tail)
                             }
                             .padding(16)
                             .background(Color.white)
                             .cornerRadius(8)
                             .shadow(radius: 2, x: 0, y: 1)
-                            .frame(width: UIScreen.main.bounds.width - 32)
                         }
                     }
-                    .padding(16)
+                    .listStyle(PlainListStyle())
+                    .background(Color.clear)
+                    .searchable(text: $searchText)
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -101,7 +128,6 @@ struct NotificationListView: View {
                             .accessibilityAddTraits(.isHeader)
                     }
                 } // 타이틀 중앙에 넣는방법.
-                .listStyle(InsetListStyle())
                 .onAppear(perform: notificationManager.reloadAuthorizationStatus)
                 .onChange(of: notificationManager.authorizationStatus) { authorizationStatus in
                     switch authorizationStatus {
@@ -140,6 +166,8 @@ struct NotificationListView: View {
             .overlay(infoOverlayView)
         }
     }
+    
+    
 }
 
 extension NotificationListView {

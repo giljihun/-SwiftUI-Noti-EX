@@ -30,8 +30,8 @@
             filePath = "Views/NotificationListView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "34"
-            endingLineNumber = "34"
+            startingLineNumber = "51"
+            endingLineNumber = "51"
             landmarkName = "infoOverlayView"
             landmarkType = "24">
          </BreakpointContent>
