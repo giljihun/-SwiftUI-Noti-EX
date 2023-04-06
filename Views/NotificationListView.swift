@@ -88,43 +88,50 @@ struct NotificationListView: View {
             // content layer
             NavigationView {
                 VStack(spacing: 16) {
-                    List {
-                        ForEach(filteredList, id: \.self) { notification in
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text(notification.content.title)
-                                    .font(.system(size: 20, weight: .bold, design: .default))
-                                    .frame(width: UIScreen.main.bounds.width - 100, alignment: .leading)
-                                    .lineLimit(1)
-                                    .minimumScaleFactor(0.5)
-                                    .truncationMode(.tail)
-                                Text(notification.content.body)
-                                    .frame(width: UIScreen.main.bounds.width - 100, alignment: .leading)
-                                    .lineLimit(1)
-                                    .minimumScaleFactor(0.5)
-                                    .truncationMode(.tail)
-                                    .allowsTightening(true)
-                                Text(timeDisplayText(from: notification))
-                                    .font(.system(size: 14, weight: .ultraLight, design: .default))
-                                    .frame(width: UIScreen.main.bounds.width - 100, alignment: .leading)
-                                    .lineLimit(1)
-                                    .minimumScaleFactor(0.5)
-                                    .truncationMode(.tail)
+                    GeometryReader { geometry in
+                        List {
+                            ForEach(filteredList, id: \.self) { notification in
+                                VStack(alignment: .leading) {
+                                    Text(notification.content.title)
+                                        .font(.system(size: 20, weight: .bold, design: .default))
+                                        .frame(width: geometry.size.width - 90, alignment: .leading)
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.5)
+                                        .truncationMode(.tail)
+                                    Spacer(minLength:3)
+                                    Text(notification.content.body)
+                                        .frame(width: geometry.size.width - 90 , alignment: .leading)
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.5)
+                                        .truncationMode(.tail)
+                                    Spacer(minLength:5)
+                                    Text(timeDisplayText(from: notification))
+                                        .font(.system(size: 14, weight: .ultraLight, design: .default))
+                                        .frame(width: geometry.size.width - 90, alignment: .leading)
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.5)
+                                        .truncationMode(.tail)
+                                }
+                                .listRowSeparator(.hidden)
+                                .padding(16)
+                                .background(Color.white)
+                                .cornerRadius(8)
+                                .shadow(radius: 2, x: 0, y: 1)
                             }
-                            .padding(16)
-                            .background(Color.white)
-                            .cornerRadius(8)
-                            .shadow(radius: 2, x: 0, y: 1)
+                            .onDelete(perform: delete)
+                            .onMove(perform: move)
+                            .frame(maxWidth: .infinity)
                         }
+                        .listStyle(PlainListStyle())
+                        .background(Color.clear)
+                        .searchable(text: $searchText, placement: .navigationBarDrawer)
                     }
-                    .listStyle(PlainListStyle())
-                    .background(Color.clear)
-                    .searchable(text: $searchText)
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .principal) {
-                        Text("언제드라?")
-                            .font(.largeTitle.bold())
+                        Text("Cool-Time")
+                            .font(.title.bold())
                             .accessibilityAddTraits(.isHeader)
                     }
                 } // 타이틀 중앙에 넣는방법.
@@ -152,7 +159,10 @@ struct NotificationListView: View {
                         Image(systemName: "plus.circle")
                             .imageScale(.large)
                     }
-                }
+                } // create 버튼
+                .toolbar {
+                    EditButton()
+                } // edit 버튼
                 .sheet(isPresented: $isCreatePresented) {
                     NavigationView {
                         CreateNotificationView(
@@ -177,6 +187,11 @@ extension NotificationListView {
         )
         notificationManager.reloadLocalNotifications()
     }
+    
+    func move(from source: IndexSet, to destination: Int) {
+            notificationManager.moveLocalNotifications(from: source, to: destination)
+        }
+
 }
 
 struct NotificationListView_Previews: PreviewProvider {

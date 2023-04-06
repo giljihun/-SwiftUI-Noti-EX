@@ -87,4 +87,12 @@ final class NotificationManager: ObservableObject {
             notifications.remove(at: index)
         }
     }
+    
+    func moveLocalNotifications(from source: IndexSet, to destination: Int) {
+        var requests = notifications
+        requests.move(fromOffsets: source, toOffset: destination)
+        notifications = requests
+    }
+
+
 }
